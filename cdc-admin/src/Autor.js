@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import InputCustomizado from './componentes/InputCustomizado';
-import urlAPI from './APIConstants';
+import constAPI from './APIConstants';
 import $ from 'jquery';
+import PubSub from 'pubsub-js';
 
 class FormularioAutor extends Component {
     constructor() {
@@ -30,14 +31,15 @@ class FormularioAutor extends Component {
         console.log('Dados sendo enviados');
 
             $.ajax({
-                url:urlAPI.apiURL + urlAPI.endPoints.autores,
+                url:constAPI.apiURL + constAPI.endPoints.autores,
                 contentType: 'application/json',
                 dataType: 'json',
                 type:'post',
                 data: JSON.stringify({nome:this.state.nome, email:this.state.email, senha:this.state.senha}),
-                success: function(resposta){
-                    this.props.callbackAtualizaListagem(resposta);
-                }.bind(this),
+                success: function(novaListagem){
+                    PubSub.publish(constAPI.publishs.autores, novaListagem);
+
+                },
                 error: function(resposta){
                     console.error(resposta);
                 }                
@@ -94,27 +96,26 @@ export class AutorBox extends Component {
     constructor() {
         super();
         this.state = {lista: [{nome: 'Alberto', email: 'alberto.souza@caelum.com.br', senha:'123456'}]}; //Valor default, apenas para testes
-        this.atualizaListagem = this.atualizaListagem.bind(this);
     }
 
     componentWillMount() {
         $.ajax({
-            url:urlAPI.apiURL + urlAPI.endPoints.autores,
+            url:constAPI.apiURL + constAPI.endPoints.autores,
             dataType: 'json',
             success: function(resposta) {
                 this.setState({lista: resposta});
             }.bind(this)
         });
-    }
 
-    atualizaListagem(novaLista) {
-        this.setState({lista: novaLista});
+        PubSub.subscribe(constAPI.publishs.autores, function(topico, novaListagem) {
+            this.setState({lista: novaListagem});
+        }.bind(this));
     }
 
     render() {
         return (
             <div>
-                <FormularioAutor callbackAtualizaListagem={this.atualizaListagem}/>
+                <FormularioAutor/>
                 <TabelaAutores lista={this.state.lista}/>
             </div>
         );
