@@ -3,15 +3,20 @@ import InputCustomizado from './componentes/InputCustomizado';
 import constAPI from './APIConstants';
 import $ from 'jquery';
 import PubSub from 'pubsub-js';
+import TratadorErros from './TratadorErros';
 
 class FormularioAutor extends Component {
     constructor() {
         super();
-        this.state = {nome:'', email:'', senha:''};
+        this.state = this.getEmptyState();
         this.enviaForm = this.enviaForm.bind(this);
         this.setNome = this.setNome.bind(this);
         this.setEmail = this.setEmail.bind(this);
         this.setSenha = this.setSenha.bind(this);
+    }
+
+    getEmptyState() {
+        return {nome:'', email:'', senha:''};
     }
 
     setNome(evento) {
@@ -38,11 +43,19 @@ class FormularioAutor extends Component {
                 data: JSON.stringify({nome:this.state.nome, email:this.state.email, senha:this.state.senha}),
                 success: function(novaListagem){
                     PubSub.publish(constAPI.publishs.autores, novaListagem);
-
-                },
+                    this.setState(this.getEmptyState());
+                }.bind(this),
                 error: function(resposta){
-                    console.error(resposta);
-                }                
+                    if(resposta.status === 400) {
+                        new TratadorErros().publicaErros(resposta.responseJSON);
+                    }
+                    else {
+                        console.error(resposta);
+                    }
+                },
+                beforeSend: function() {
+                    PubSub.publish(constAPI.publishs.limpaErros, {});
+                }
             });
     }
 
