@@ -108,7 +108,7 @@ class TabelaAutores extends Component {
 export class AutorBox extends Component {
     constructor() {
         super();
-        this.state = {lista: [{nome: 'Alberto', email: 'alberto.souza@caelum.com.br', senha:'123456'}]}; //Valor default, apenas para testes
+        this.state = {lista: [{nome: 'Daniel', email: 'daniel.mendes@email.com.br', senha:'123456'}]}; //Valor default, apenas para testes
     }
 
     componentWillMount() {
@@ -128,8 +128,13 @@ export class AutorBox extends Component {
     render() {
         return (
             <div>
-                <FormularioAutor/>
-                <TabelaAutores lista={this.state.lista}/>
+                <div className='header'>
+                    <h1>Cadastro de autores</h1>
+                </div>
+                <div className='content' id='content'>
+                    <FormularioAutor/>
+                    <TabelaAutores lista={this.state.lista}/>
+                </div>
             </div>
         );
     }
