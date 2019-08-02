@@ -16,7 +16,7 @@ class FormularioLivro extends Component {
     }
 
     getEmptyState() {
-        return {titulo:'', preco:0, autorId:'', autores: [{id: 'Daniel', nome: 'Daniel', email:'daniel.mendes@email.com.br'}]};
+        return {titulo:'', preco:0, autorId:''};
     }
 
     setTitulo(evento) {
@@ -70,7 +70,7 @@ class FormularioLivro extends Component {
                         <select value={this.state.autorId} name='autorId' onChange={this.setAutorId}>
                             <option value="">Selecione</option>
                             { 
-                                this.state.autores.map(function(autor) {
+                                this.props.autores.map(function(autor) {
                                 return <option key={ autor.id } value={ autor.id }>
                                             { autor.nome }
                                         </option>;
@@ -97,6 +97,7 @@ class TabelaLivros extends Component {
                     <thead>
                     <tr>
                         <th>Título</th>
+                        <th>Autor</th>
                         <th>Preço</th>
                     </tr>
                     </thead>
@@ -104,8 +105,9 @@ class TabelaLivros extends Component {
                         {
                             this.props.lista.map( function(livro) {
                                 return (
-                                    <tr>
+                                    <tr key={livro.titulo}>
                                         <td>{livro.titulo}</td>
+                                        <td>{livro.autor.nome}</td>
                                         <td>{livro.preco}</td>
                                     </tr>
                                 )
@@ -121,7 +123,7 @@ class TabelaLivros extends Component {
 export class LivroBox extends Component {
     constructor() {
         super();
-        this.state = {lista: [{titulo: 'Desconhecido', preco: 0, autorId: ''}]}; //Valor default, apenas para testes
+        this.state = {lista: [{titulo: 'Desconhecido', preco: 0, autorId: '', autor: {nome: 'Daniel',}}], autores: [ {nome: 'Daniel', id: 'Daniel'}]}; //Valor default, apenas para testes
     }
 
     componentWillMount() {
@@ -154,7 +156,7 @@ export class LivroBox extends Component {
                     <h1>Cadastro de livros</h1>
                 </div>
                 <div className='content' id='content'>
-                    <FormularioLivro/>
+                    <FormularioLivro autores={this.state.autores}/>
                     <TabelaLivros lista={this.state.lista}/>
                 </div>
             </div>

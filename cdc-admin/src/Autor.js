@@ -91,7 +91,7 @@ class TabelaAutores extends Component {
                         {
                             this.props.lista.map( function(autor) {
                                 return (
-                                    <tr>
+                                    <tr key={autor.nome}>
                                         <td>{autor.nome}</td>
                                         <td>{autor.email}</td>
                                     </tr>

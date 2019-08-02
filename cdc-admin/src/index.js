@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {Router, Route, browseHistory, IndexRoute} from 'react-router';
+import {Router, Route, browserHistory, IndexRoute} from 'react-router';
 import Home from './Home';
 import { AutorBox } from './Autor';
 import { LivroBox } from './Livro';
 
 //ReactDOM.render(<App />, document.getElementById('root'));
 ReactDOM.render(
-    (<Router history={browseHistory}>
+    (<Router history={browserHistory}>
       <Route path="/" component={App}>
-        <IndexRoute path="*" component={Home}/>
+        <IndexRoute component={Home}/>
         <Route path="/autor" component={AutorBox}/>
         <Route path="/livro" component={LivroBox}/>
       </Route>
