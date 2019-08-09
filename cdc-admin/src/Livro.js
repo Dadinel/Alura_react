@@ -58,6 +58,10 @@ class FormularioLivro extends Component {
     }
 
     render() {
+        let autores = this.props.autores.map( function(autor) {
+            return ( <option key={autor.id} value={autor.id}>{autor.nome}</option> );
+        });
+
         return (
             <div className='pure-form pure-form-aligned'>
                 <form className='pure-form pure-form-aligned' onSubmit={this.enviaForm} method='post'>
@@ -69,13 +73,7 @@ class FormularioLivro extends Component {
                         <label htmlFor='autorId'>Autor</label> 
                         <select value={this.state.autorId} name='autorId' onChange={this.setAutorId}>
                             <option value="">Selecione</option>
-                            { 
-                                this.props.autores.map(function(autor) {
-                                return <option key={ autor.id } value={ autor.id }>
-                                            { autor.nome }
-                                        </option>;
-                                })
-                            }
+                            {autores}
                         </select>
                     </div>
 
@@ -91,6 +89,16 @@ class FormularioLivro extends Component {
 
 class TabelaLivros extends Component {
     render() {
+        let livros = this.props.lista.map( function(livro) {
+            return (
+                <tr key={livro.titulo}>
+                    <td>{livro.titulo}</td>
+                    <td>{livro.autor.nome}</td>
+                    <td>{livro.preco}</td>
+                </tr>
+            );
+        });
+
         return (
             <div>            
                 <table className='pure-table'>
@@ -102,17 +110,7 @@ class TabelaLivros extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {
-                            this.props.lista.map( function(livro) {
-                                return (
-                                    <tr key={livro.titulo}>
-                                        <td>{livro.titulo}</td>
-                                        <td>{livro.autor.nome}</td>
-                                        <td>{livro.preco}</td>
-                                    </tr>
-                                )
-                            })
-                        }
+                        {livros}
                     </tbody>
                 </table>
             </div>
